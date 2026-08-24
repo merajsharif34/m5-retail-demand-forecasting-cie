@@ -1,0 +1,13 @@
+Repository preparation status
+
+Prepared from the finalized thesis/journal workflow:
+- final reproducibility notebook included
+- final LaTeX manuscript included
+- bibliography extracted from the manuscript source
+- supplementary material (LaTeX source, figures, and compiled PDF) included
+- README and reproducibility guide included
+- requirements file included
+- CITATION.cff included
+- .gitignore excludes raw data and runtime artifacts
+- raw datasets intentionally excluded
+- generated figures can be regenerated from the notebook

@@ -1,0 +1,404 @@
+% ============================================================
+% Supplementary Material accompanying:
+% "A Data-Driven Framework for Retail Demand Forecasting and Financial
+%  and Inventory Scenario Analysis Using the M5 Benchmark Dataset"
+% Computers & Industrial Engineering - Journal submission
+%
+% This document collects the additional figures, exploratory diagnostics,
+% and development-stage analyses produced by the underlying research
+% notebook that were not carried into the main manuscript, consistent
+% with the "one primary figure and one primary table per research
+% question" policy adopted for the main text. All numerical results that
+% are reported with precise values in the main manuscript are referenced
+% here by their main-text table number rather than restated from
+% intermediate notebook drafts, so that the two documents never disagree
+% on a number.
+% ============================================================
+
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{placeins}
+
+\journal{Computers \& Industrial Engineering}
+
+% Safe figure command: the document still compiles if a figure file has
+% not yet been placed alongside it.
+\newcommand{\safeincludegraphics}[2][]{%
+  \IfFileExists{\detokenize{#2}}{\includegraphics[#1]{#2}}{%
+    \fbox{\parbox[c][0.16\textheight][c]{0.92\linewidth}{%
+      \centering Figure file not yet uploaded\\[2mm]
+      \texttt{\detokenize{#2}}}}}}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Supplementary Material for: A Data-Driven Framework for Retail Demand Forecasting and Financial and Inventory Scenario Analysis Using the M5 Benchmark Dataset}
+
+\author[label1]{Mohamed Meraj Mansur Sharif\corref{cor1}}\ead{mohamed.sharif@ue-germany.de}
+\author[label1]{Raja Hashim Ali}
+\author[label1]{Talha Ali Khan}
+\cortext[cor1]{Corresponding author.}
+
+\affiliation[label1]{organization={Department of Business, University of Europe for Applied Sciences},
+            addressline={Think Campus, Konrad-Zuse-Ring 11},
+            city={Potsdam},
+            postcode={14469},
+            state={Brandenburg},
+            country={Germany}}
+
+\end{frontmatter}
+
+% ============================================================
+\section*{About this Supplementary Material}
+% ============================================================
+
+The main manuscript reports exactly one primary figure and one primary table for each of the seven research questions, so that the printed article stays focused and readable.
+The underlying research notebook, however, produced a considerably larger set of diagnostic figures while the forecasting pipeline, the financial and inventory scenario calculations, and the robustness checks were being developed and verified.
+This supplementary document collects that additional material so that interested readers and reviewers can inspect the fuller analytical trail behind the reported results.
+Figures and tables in this document are numbered independently of the main manuscript, starting from Figure~\ref{sfig:s1} and Table~\ref{stab:s1}.
+Where a figure in this document relates to a specific numerical result that is reported precisely in the main text, the corresponding main-text table is cited by number rather than the value being restated, so that the two documents cannot drift apart on a number as the manuscript is revised.
+Two groups of figures in this document (Sections~2 and~3 below) present exploratory analyses -- a hierarchical-aggregation diagnostic and an early ARIMA-versus-machine-learning comparison -- that were carried out during development but are explicitly not part of the final journal research questions.
+They are included here only for transparency and reproducibility, consistent with the scope defined in the main manuscript.
+
+% ============================================================
+\section{Supplementary Diagnostics for RQ1: Feature Configuration and Underlying Data Relationships}
+% ============================================================
+
+This section presents supporting diagnostics for RQ1, which asks how forecasting accuracy changes as historical, pricing, and calendar information are progressively combined.
+The main manuscript reports the headline comparison of the four feature configurations in Table~4 and Figure~3 of the main text.
+The figures below provide additional context: an earlier development-stage rendering of the same configuration comparison, the correlation structure among the engineered predictors, a development-stage view of the Random Forest feature-importance diagnostic reported formally in Table~5 of the main text, and a scatter-plot view of predicted against actual demand for the full multi-source configuration.
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.85\linewidth]{Figures/S1_rq1_configuration_dev.pdf}
+\caption{Development-stage comparison of forecast MAE across the baseline, price-enhanced, calendar-enhanced, and full multi-source feature configurations. This chart was produced while the RQ1 experiment was being built and precedes the redesigned, publication-ready version used as the primary RQ1 figure in the main manuscript; the two figures describe the same four-configuration comparison reported numerically in Table~4 of the main text.}
+\label{sfig:s1}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.68\linewidth]{Figures/S2_correlation_heatmap.pdf}
+\caption{Pearson correlation matrix among the target variable (\texttt{sales}) and a subset of the engineered predictors, including the lag, rolling-mean, calendar, and pricing features. The rolling-mean and lag variables are strongly correlated with one another (coefficients above 0.6), which is the statistical basis for treating the Random Forest importance ranking reported in Table~5 of the main text as a descriptive rather than a causal measure of feature contribution. The near-zero correlation of \texttt{sell\_price} with sales at this aggregate level is consistent with price acting as a secondary rather than a dominant predictor in the fitted models.}
+\label{sfig:s2}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S3_feature_importance_dev.pdf}
+\caption{Development-stage Random Forest feature-importance chart produced while the RQ2 diagnostic was being finalised. The ranking of features is consistent with the final importance values reported in Table~5 of the main manuscript; this earlier rendering is retained here as part of the analytical trail rather than as an additional independent result.}
+\label{sfig:s3}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S4_actual_vs_predicted_dev.pdf}
+\caption{Scatter plot of actual against predicted demand for the full multi-source feature configuration, with the diagonal line representing perfect prediction. Points concentrated close to the diagonal indicate that the model reproduces the overall scale of demand reasonably well across the observed range, while the visible spread away from the line at higher demand values is consistent with the larger absolute errors documented for high-demand series in Table~10 of the main manuscript.}
+\label{sfig:s4}
+\end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{Exploratory Diagnostic: Hierarchical Aggregation (Not Part of the Reported Framework)}
+% ============================================================
+
+The four figures in this section were produced during an early, exploratory stage of the project to examine how forecast error behaves across a simplified illustrative retail hierarchy (item, category, store, and state) and whether reconciling forecasts across that hierarchy would change forecast accuracy or coherence.
+This line of analysis was ultimately not carried into the final journal research questions: as stated explicitly in Section~2.5 of the main manuscript, the reported framework does not perform hierarchical reconciliation, and the study instead focuses on the 500 selected high-volume item--store series evaluated directly at the row level.
+The figures are retained here purely for reproducibility and transparency about the development process, and the illustrative hierarchy shown in Figure~\ref{sfig:s7} uses a small synthetic set of items and stores for visual clarity rather than the full M5 hierarchy.
+None of the numbers in this section should be read as, or compared against, the results reported in the main manuscript.
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S5_hierarchical_error_variability.pdf}
+\caption{Exploratory comparison of forecast-error variability across illustrative hierarchical aggregation levels (item, category, store, and state), produced during an early development stage. Error dispersion narrows at higher aggregation levels, an expected statistical consequence of aggregating multiple series rather than evidence bearing on the row-level results reported in the main manuscript.}
+\label{sfig:s5}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S6_hierarchical_consistency.pdf}
+\caption{Exploratory comparison of forecast consistency between independently generated forecasts and forecasts reconciled across the illustrative hierarchy described above. This diagnostic was not extended into the final journal framework, which does not perform hierarchical reconciliation.}
+\label{sfig:s6}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.62\linewidth]{Figures/S7_hierarchical_structure_diagram.pdf}
+\caption{Schematic illustration of the small synthetic hierarchy (one state, two stores, four categories, eight items) used only to visualise the concept of hierarchical reconciliation during early development. The diagram does not represent the actual M5 product hierarchy and was not used to generate any of the reported empirical results.}
+\label{sfig:s7}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S8_hierarchical_accuracy_comparison.pdf}
+\caption{Exploratory comparison of forecast accuracy between independent and hierarchically reconciled forecasts across the illustrative aggregation levels. As with the other figures in this section, this diagnostic pre-dates the final research-question structure and is retained only as part of the development record.}
+\label{sfig:s8}
+\end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{Exploratory Comparison: ARIMA versus Machine-Learning Models}
+% ============================================================
+
+The four figures in this section originate from an earlier, exploratory comparison of ARIMA against Random Forest and LightGBM, carried out before the final RQ3 experimental design was fixed.
+The final journal RQ3 instead compares Linear Regression, Random Forest, and XGBoost under strictly identical training and test conditions, with LightGBM and ARIMA reported only as supporting models, as described in Section~3.6 of the main manuscript and summarised in Table~6.
+The comparison shown here uses an earlier aggregate-level ARIMA fit and is retained for transparency about the development process rather than as an additional benchmark result; the ARIMA figures reported and discussed in the main manuscript (MAE 958.511, RMSE 1{,}107.919, aggregate daily series) supersede the values implicit in this section.
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S9_arima_ml_rmse_comparison.pdf}
+\caption{Exploratory RMSE comparison between ARIMA, Random Forest, and LightGBM produced during an early development iteration, before the final three-model (Linear Regression, Random Forest, XGBoost) RQ3 design reported in Table~6 of the main manuscript was fixed. The ordering of models is qualitatively consistent with the final results: the tree-based models substantially outperform the aggregate ARIMA baseline.}
+\label{sfig:s9}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S10_arima_ml_actual_vs_predicted.pdf}
+\caption{Scatter plot of actual against predicted demand for an early LightGBM fit produced during the exploratory ARIMA-versus-machine-learning comparison. Points concentrated near the diagonal reference line indicate reasonable point-level agreement between predictions and observed demand at this development stage.}
+\label{sfig:s10}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S11_arima_ml_error_distribution.pdf}
+\caption{Boxplot comparison of the forecast-error distributions for ARIMA, Random Forest, and LightGBM from the same exploratory comparison. The machine-learning models show a visibly tighter error distribution than the aggregate ARIMA baseline, consistent with the pattern later confirmed under the final experimental design summarised in Table~6.}
+\label{sfig:s11}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.85\linewidth]{Figures/S12_arima_ml_actual_vs_predicted_series.pdf}
+\caption{Time-series comparison of actual against predicted demand over the first 100 test observations for the exploratory LightGBM fit. The predicted series tracks the general shape of observed demand while smoothing over some of the sharper local fluctuations, a typical characteristic of tree-based ensemble forecasts on noisy retail series.}
+\label{sfig:s12}
+\end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{Supplementary Diagnostics for RQ4: Financial Translation}
+% ============================================================
+
+RQ4 translates the LightGBM forecasts on the M5 test set into scenario-level revenue, stockout-cost, and holding-cost quantities, reported precisely in Table~7 and Figure~6 of the main manuscript.
+The figures below present the same underlying financial calculation from four complementary viewpoints -- an absolute-value bar chart, a proportional breakdown, the distribution of revenue across individual observations, and the relationship between revenue and holding cost at the observation level -- to give readers additional visibility into how the aggregate figures in Table~7 are composed.
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S13_financial_impact_bar.pdf}
+\caption{Bar chart of fulfilled-demand revenue, stockout-cost exposure, and holding-cost exposure calculated from the LightGBM forecasts on the M5 test set. The underlying quantities correspond to those reported precisely in Table~7 of the main manuscript; revenue is shown on the same scale as the two cost components for visual comparison.}
+\label{sfig:s13}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S14_financial_contribution_pie.pdf}
+\caption{Proportional breakdown of the same three financial quantities shown in Figure~\ref{sfig:s13} and Table~7 of the main manuscript. Revenue accounts for the large majority of the combined total, with stockout-cost exposure contributing a visibly larger share than holding-cost exposure, consistent with the approximately 1.84:1 stockout-to-holding ratio discussed in Section~5.4 of the main text.}
+\label{sfig:s14}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S15_revenue_distribution.pdf}
+\caption{Distribution of fulfilled-demand revenue across the individual M5 test observations underlying the RQ4 financial scenario. The distribution is right-skewed, indicating that a comparatively small number of high-demand, higher-priced observations contribute disproportionately to total scenario revenue.}
+\label{sfig:s15}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S16_revenue_vs_holding_cost.pdf}
+\caption{Relationship between observation-level revenue and holding-cost exposure for a random sample of 500 test observations. The positive association indicates that observations with larger sales opportunities also tend to carry larger over-forecast exposure, illustrating at the observation level the trade-off between fulfilling demand and carrying excess inventory that motivates the safety-stock analysis in RQ5.}
+\label{sfig:s16}
+\end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{Supplementary Diagnostics for RQ5: Inventory and Service-Level Trade-off}
+% ============================================================
+
+RQ5 quantifies how the estimated safety-stock requirement changes with the target service level, reported precisely in Table~8 and Figure~7 of the main manuscript.
+The figures below present a development-stage rendering of the same trade-off curve, a simulated inventory-replenishment profile that illustrates what the resulting policy looks like in operation, a time-series comparison of forecast and actual demand over the same evaluation window, and a direct visual comparison of the two RQ4 cost components.
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S17_service_level_tradeoff_dev.pdf}
+\caption{Development-stage rendering of the safety-stock-versus-service-level trade-off curve, produced while the RQ5 experiment was being built. The monotonic, accelerating relationship between target service level and estimated safety stock is consistent with the six service-level scenarios (70\%--95\%) reported precisely in Table~8 of the main manuscript.}
+\label{sfig:s17}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S18_inventory_replenishment_profile.pdf}
+\caption{Simulated inventory position over time under a forecast-driven reorder-point policy, illustrating the operational behaviour implied by the RQ5 safety-stock estimates. Inventory declines as demand is fulfilled and is replenished once the simulated reorder threshold is reached; the simulation is illustrative and uses the same assumptions described in Section~4.7 of the main manuscript rather than an observed retailer replenishment record.}
+\label{sfig:s18}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.85\linewidth]{Figures/S19_actual_vs_forecast_series.pdf}
+\caption{Time-series comparison of actual and LightGBM-forecast demand over the first 100 test observations used in the RQ5 inventory scenario. The forecast series tracks the general level and short-term movement of observed demand, providing visual context for the safety-stock and reorder-point calculations reported in Table~8 of the main text.}
+\label{sfig:s19}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.68\linewidth]{Figures/S20_inventory_cost_components.pdf}
+\caption{Direct comparison of total stockout-cost exposure and total holding-cost exposure from the RQ4 financial scenario, redrawn here alongside the RQ5 inventory analysis for context. The values correspond to those reported in Table~7 of the main manuscript.}
+\label{sfig:s20}
+\end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{Supplementary Diagnostics for RQ6: Forecast Uncertainty and Stockout Risk}
+% ============================================================
+
+RQ6 separates the 14,000 M5 test observations into three equal-sized uncertainty tertiles using absolute forecast error and reports tier-specific error statistics and safety-stock estimates precisely in Table~9 and Figure~8 of the main manuscript.
+The figures below present the underlying error distribution, the relationship between forecast error and stockout risk at the observation level, the tier-based safety-stock recommendation, and the operational risk-zone classification that motivates the discussion in Section~5.6 of the main text.
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S21_forecast_uncertainty_distribution.pdf}
+\caption{Distribution of absolute forecast error across the 14,000 M5 test observations. The distribution is right-skewed, with most observations concentrated at comparatively low error values and a smaller number of observations exhibiting substantially larger deviations; this shape is the empirical basis for the tertile-based uncertainty grouping reported in Table~9 of the main manuscript.}
+\label{sfig:s21}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S22_error_vs_stockout_risk.pdf}
+\caption{Relationship between absolute forecast error and stockout risk (the under-forecast component of demand error) across the M5 test observations. The positive association is expected by construction, since stockout risk is defined directly from the under-forecast component of the error; the figure illustrates why forecast-error magnitude can serve as a practical, easily computed proxy for identifying observations warranting closer inventory attention, as discussed in Section~5.6 of the main text.}
+\label{sfig:s22}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S23_safety_stock_by_uncertainty_dev.pdf}
+\caption{Recommended safety stock by forecast-uncertainty tier, computed using the same tertile grouping, 95\% service target, and seven-day lead-time assumption as the primary RQ6 analysis. This chart displays the identical tier-based safety-stock estimates reported precisely in Table~9 of the main manuscript (2.74, 4.36, and 36.05 units for the low-, medium-, and high-uncertainty tiers, respectively), shown here as a line chart produced during the development stage rather than the bar-chart format used as the primary RQ6 figure.}
+\label{sfig:s23}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S24_operational_risk_zones.pdf}
+\caption{Classification of the M5 test observations into low-, medium-, and high-risk operational zones based on forecast-error magnitude and associated stockout exposure. The majority of observations fall into the low-risk zone, with a comparatively small number of high-risk observations that, per Section~5.6 of the main manuscript, warrant closer inventory attention rather than a uniform safety-stock policy across the full portfolio.}
+\label{sfig:s24}
+\end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{Supplementary Diagnostics for RQ7: Demand Regimes, Temporal Stability, and Scalability}
+% ============================================================
+
+RQ7 evaluates whether forecasting performance is stable across low-, medium-, and high-demand regimes and reports the regime-level MAE values, together with the separate DataCo external-validation result, precisely in Table~10 and Figure~9 of the main manuscript.
+The figures below present a development-stage version of the same regime comparison, a rolling-error stability diagnostic across the evaluation horizon, a two-dimensional error-density view across demand levels, and the conceptual scalability assessment discussed as a limitation in Section~5.9 of the main text.
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S25_demand_regime_accuracy_dev.pdf}
+\caption{Development-stage comparison of LightGBM MAE across low-, medium-, and high-demand regimes, produced using an earlier demand-quantile grouping while the RQ7 experiment was being finalised. The qualitative pattern -- forecast error increasing with demand intensity -- is consistent with the final regime-level result reported precisely in Table~10 of the main manuscript, although the exact regime boundaries and MAE values in this earlier chart differ from the final reported figures and should not be quoted in place of Table~10.}
+\label{sfig:s25}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.78\linewidth]{Figures/S26_rolling_error_stability.pdf}
+\caption{Rolling mean absolute error computed over the evaluation horizon as a temporal-robustness diagnostic. The rolling error remains within a broadly stable range without a persistent upward trend, providing supporting evidence that forecast quality does not systematically deteriorate across the 28-day test horizon used throughout the study.}
+\label{sfig:s26}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S27_error_heatmap_demand_conditions.pdf}
+\caption{Two-dimensional density representation of forecast error against demand magnitude across the M5 test observations. Errors remain concentrated within a comparatively narrow band for low-to-moderate demand levels, with visibly greater dispersion at higher demand levels, consistent with the regime-level pattern reported in Table~10 of the main manuscript.}
+\label{sfig:s27}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.72\linewidth]{Figures/S28_scalability_assessment.pdf}
+\caption{Conceptual scalability assessment showing the projected relative processing workload as the number of forecasting entities increases from 100 to 10,000 (illustrative multipliers of 1$\times$ to 100$\times$, tabulated in Table~\ref{stab:s2}). The relationship is linear by construction and represents an analytical projection of the modular pipeline design rather than a measured computational benchmark; no training time, memory footprint, or throughput was profiled, consistent with the limitation noted in Section~5.9 of the main manuscript.}
+\label{sfig:s28}
+\end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{Supplementary Figure for External Validation on the DataCo Dataset}
+% ============================================================
+
+Section~4.10 and Table~10 of the main manuscript report the external-validation result on the DataCo SMART SUPPLY CHAIN dataset (MAE 50.32, RMSE 61.25, chronological 80/20 split).
+The figure below provides a visual complement to that numerical result.
+
+\begin{figure}[!t]
+\centering
+\safeincludegraphics[width=0.85\linewidth]{Figures/S29_dataco_actual_vs_predicted.pdf}
+\caption{Actual versus LightGBM-predicted daily demand over the first 80 chronological test observations of the DataCo external-validation experiment. The predicted series follows the overall level and direction of observed demand while smoothing some of the sharper day-to-day movements, consistent with the MAE and RMSE values reported in Table~10 of the main manuscript. Because the DataCo target scale and demand-generating process differ from M5, this figure is presented as a robustness check rather than as a directly comparable benchmark.}
+\label{sfig:s29}
+\end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{Supplementary Tables}
+% ============================================================
+
+Table~\ref{stab:s1} consolidates the headline three-model comparison with the two supporting models (LightGBM and ARIMA) into a single reference table.
+Table~\ref{stab:s2} lists the illustrative scaling multipliers underlying the conceptual scalability assessment shown in Figure~\ref{sfig:s28}.
+
+\begin{table}[!t]
+\centering
+\caption{Extended comparison of all forecasting models evaluated during the study. The headline three-model comparison (Linear Regression, Random Forest, XGBoost) is reported precisely in Table~6 of the main manuscript; the two supporting models are added here for reference. ARIMA is fitted to the aggregate daily series rather than the row-level item--store observations used by the other four models and is therefore not numerically comparable with the row-level figures.}
+\label{stab:s1}
+\begin{tabular}{lccp{4.0cm}}
+\toprule
+\textbf{Model} & \textbf{MAE} & \textbf{RMSE} & \textbf{Evaluation basis} \\
+\midrule
+Linear Regression & 5.935 & 9.141 & Row-level, M5 test set ($n=14{,}000$) \\
+Random Forest & 5.608 & 8.753 & Row-level, M5 test set ($n=14{,}000$) \\
+XGBoost & \textbf{5.582} & \textbf{8.690} & Row-level, M5 test set ($n=14{,}000$) \\
+LightGBM (supporting) & 5.584 & 8.693 & Row-level, M5 test set ($n=14{,}000$) \\
+ARIMA(5,1,0) (supporting) & 958.511 & 1{,}107.919 & Aggregate daily series (not row-level) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!t]
+\centering
+\caption{Illustrative scaling multipliers underlying the conceptual scalability assessment shown in Figure~\ref{sfig:s28}. The relative processing workload is an analytical projection assuming linear scaling with the number of forecasting entities and does not reflect a measured runtime benchmark.}
+\label{stab:s2}
+\begin{tabular}{lc}
+\toprule
+\textbf{Forecasting entities (illustrative)} & \textbf{Relative processing workload} \\
+\midrule
+100 & 1$\times$ \\
+500 & 5$\times$ \\
+1{,}000 & 10$\times$ \\
+2{,}500 & 25$\times$ \\
+5{,}000 & 50$\times$ \\
+10{,}000 & 100$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\FloatBarrier
+
+% ============================================================
+\section*{Data and Code Availability}
+% ============================================================
+
+The figures in this document were generated by the same reproducibility notebook referenced in the Code Availability statement of the main manuscript, executed in a Kaggle environment using Python with pandas, NumPy, scikit-learn, XGBoost, LightGBM, statsmodels, matplotlib, and seaborn.
+The M5 Forecasting Accuracy dataset used throughout this document is publicly distributed through the M5 competition data repository, and the DataCo SMART SUPPLY CHAIN dataset used for external validation is publicly available through Mendeley Data (DOI: 10.17632/8gx2fvg2k6.5).
+The notebook and supporting files accompany the manuscript submission according to the journal and institutional requirements.
+
+\end{document}

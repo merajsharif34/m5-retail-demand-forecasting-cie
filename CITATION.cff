@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: "A Data-Driven Framework for Retail Demand Forecasting and Financial Impact Evaluation Using the M5 Benchmark Dataset"
+message: "If you use this repository or the associated research, please cite the manuscript."
+type: software
+authors:
+  - family-names: "Sharif"
+    given-names: "Mohamed Meraj Mansur"
+  - family-names: "Ali"
+    given-names: "Raja Hashim"
+  - family-names: "Khan"
+    given-names: "Talha Ali"
+repository-code: "https://github.com/REPLACE_WITH_YOUR_USERNAME/m5-retail-demand-forecasting-cie"
+keywords:
+  - demand forecasting
+  - retail
+  - supply chain
+  - M5 forecasting
+  - machine learning
+  - inventory
+  - safety stock
+  - financial impact
+  - XGBoost
+  - Random Forest

@@ -1,0 +1,7 @@
+Highlights
+
+Reproducible forecasting links demand prediction with inventory decisions.
+M5 analysis uses the 500 highest-volume item--store series.
+XGBoost achieves MAE 5.582 and RMSE 8.690.
+Rolling demand features dominate the Random Forest importance diagnostic.
+Forecasts are translated into financial and safety-stock scenarios.
