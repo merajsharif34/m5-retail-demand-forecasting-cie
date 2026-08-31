@@ -1,23 +1,23 @@
-# M5 Retail Demand Forecasting — Computers & Industrial Engineering
+# A Data-Driven Framework for Retail Demand Forecasting and Financial Impact Evaluation Using the M5 Benchmark Dataset
 
-Reproducible research repository for:
+Reproducibility repository for the manuscript prepared for *Computers & Industrial Engineering* (Elsevier).
 
-**A Data-Driven Framework for Retail Demand Forecasting and Financial Impact Evaluation Using the M5 Benchmark Dataset**
+## Repository purpose
 
-This repository contains the final reproducibility notebook and the LaTeX manuscript source prepared for submission to *Computers & Industrial Engineering* (Elsevier).
+This repository preserves the journal-study source materials needed to inspect the analysis, manuscript, supplementary material, and submission assets.
+
+**Source of truth for empirical results:** the final journal notebook in `notebooks/`. The thesis is not used as the numerical authority for the journal manuscript. If an older document and the final journal notebook differ, the journal notebook is the reference for the journal results.
 
 ## Study at a glance
 
 - **Primary dataset:** M5 Forecasting Accuracy competition dataset
-- **Series selection:** 500 highest-volume item–store series using training-period demand only
+- **Series selection:** 500 highest-volume item-store series using training-period demand only
 - **Evaluation:** chronological 28-day hold-out
 - **Test observations:** 14,000
 - **Core models:** Linear Regression, Random Forest, XGBoost
 - **Supporting analyses:** LightGBM and ARIMA
-- **Research questions:** RQ1–RQ7
+- **Research questions:** RQ1-RQ7
 - **External robustness check:** DataCo SMART SUPPLY CHAIN dataset
-
-The notebook preserves the thesis-aligned RQ1–RQ7 analyses and includes the publication/export layer used to organize the journal figures and tables.
 
 ## Repository structure
 
@@ -46,45 +46,33 @@ The notebook preserves the thesis-aligned RQ1–RQ7 analyses and includes the pu
 ├── data/
 │   └── README.md
 └── docs/
+    ├── REPOSITORY_STATUS.txt
     └── REPRODUCIBILITY.md
 ```
 
-## Running the analysis
+## Reproducibility
 
-The final notebook was designed around a Kaggle-style environment. It expects the M5 competition files under the Kaggle input tree and optionally uses the DataCo CSV for external validation.
+The notebook was prepared for a Kaggle-style execution environment and expects the original M5 competition files under the Kaggle input tree. DataCo is used only when the optional external-validation data are available.
 
-Open:
+Raw M5/DataCo datasets are intentionally not committed. Follow `data/README.md` for data-access instructions.
 
-`notebooks/M5_CIE_Thesis_and_Journal_FINAL_Reproducible.ipynb`
+The notebook contains the RQ1-RQ7 analysis and the publication/export layer. The manuscript source is `manuscript/main.tex`; the supplementary source and supplementary figure PDFs are under `manuscript/supplementary/`.
 
-Then run the notebook in the intended environment. The notebook contains the RQ1–RQ7 analyses and publication-output packaging layer.
+## Publication assets
 
-**Do not upload the raw M5 or DataCo datasets to this repository.** Use the original dataset sources described in `data/README.md`.
+`submission/` contains the manuscript PDF, supplementary PDF, graphical abstract, and highlights used for the submission package. Editable manuscript and supplementary sources remain under `manuscript/`.
 
-## Reproducibility notes
+The `figures/` directory is reserved for principal manuscript figure assets. Supplementary figure PDFs are preserved under `manuscript/supplementary/Figures/`.
 
-The study design uses training-only series selection and a chronological hold-out. The final publication layer does not introduce a new research design; it packages the existing analyses, figures and tables for manuscript use.
+## Integrity and versioning
 
-The manuscript source is in `manuscript/main.tex`. The bibliography is provided separately as `manuscript/Bibliography.bib`. The supplementary material — the additional development-stage and diagnostic figures not included as primary manuscript figures — is in `manuscript/supplementary/Supplementary_Material.tex`, with its figures in `manuscript/supplementary/Figures/`; a compiled copy is in `submission/Supplementary_Material.pdf`.
+Do not silently change reported numerical findings. If a clean rerun produces a discrepancy, investigate the data, environment, execution path, and source version before changing the manuscript.
 
-## Research outputs
-
-The final manuscript reports:
-
-- feature-configuration analysis,
-- feature-importance analysis,
-- core-model comparison,
-- financial scenario analysis,
-- service-level/safety-stock analysis,
-- uncertainty-tier analysis,
-- demand-regime robustness analysis,
-- DataCo external validation.
-
-The repository intentionally does not contain raw observations, credentials, model checkpoints, or other sensitive/generated runtime artifacts.
+Generated runtime artifacts, credentials, raw datasets, and local environments are excluded by `.gitignore`.
 
 ## Citation
 
-If you use this repository or the associated research, please cite the paper using the metadata in `CITATION.cff`.
+Please cite the repository and associated manuscript using `CITATION.cff`.
 
 ## Authors
 
